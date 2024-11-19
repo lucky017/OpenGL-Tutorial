@@ -1,5 +1,3 @@
-
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Headers/shaders.h"
@@ -10,6 +8,7 @@
 #define HEIGHT 800
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+float Color();
 
 int main()
 {
@@ -29,18 +28,18 @@ int main()
    gladLoadGL();
    
    GLfloat vertices[] = {
-      //       vertices             Textures
-            -1.0f,  1.0f, 0.0f,     1.0f, 1.0f,    0.5f, 0.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f,     1.0f, 0.0f,    0.0f, 0.5f, 0.0f,
-             1.0f, -1.0f, 0.0f,     0.0f, 0.0f,    0.0f, 0.0f, 0.5f,
-             1.0f,  1.0f, 0.0f,     0.0f, 1.0f,    0.5f, 0.0f, 0.5f
+      //       vertices                   colors            Textures
+            -1.0f,  1.0f, 0.0f,     1.0f, 0.0f, 0.0f,    //1.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f,     0.0f, 1.0f, 0.0f,    //1.0f, 0.0f,
+             1.0f, -1.0f, 0.0f,     0.0f, 0.0f, 1.0f,    //0.0f, 0.0f,
+             1.0f,  1.0f, 0.0f,     0.5f, 0.5f, 0.5f     //0.0f, 1.0f
    };
    GLuint index[] = {
       0, 1, 2,
       0, 2, 3
    };
    
-   Shader shader("/home/lucky/opengl/src/Shaders/Texture.vs", "/home/lucky/opengl/src/Shaders/Texture.fs");
+   Shader shader("/home/lucky/opengl/src/Shaders/Colors.vs", "/home/lucky/opengl/src/Shaders/Colors.fs");
    
    GLuint VAO, VBO, EBO;
    glGenVertexArrays(1, &VAO);
@@ -52,44 +51,20 @@ int main()
    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_STATIC_DRAW);
-   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
    glEnableVertexAttribArray(0);
-   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-   glEnableVertexAttribArray(2);
-   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
    glEnableVertexAttribArray(1);
-
-   GLuint texture;
-   glGenTextures(1, &texture);
-   glBindTexture(GL_TEXTURE_2D, texture);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-   int width, height, nrChannels;
-   unsigned char* data = stbi_load("/home/lucky/opengl/src/Resources/Textures/container.jpg", &width, &height, &nrChannels, 0);
-   if(data)
-   {
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-      glGenerateMipmap(GL_TEXTURE_2D);
-   }
-   else{
-      std::cout << "[ERROR]:: LOADING TEXTURE" << std::endl;
-   }
-
-   stbi_image_free(data);
-   
 
    while(!glfwWindowShouldClose(window))
    {
       glClearColor(0.3f, 0.2f, 0.2f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT);
      
-      glBindTexture(GL_TEXTURE_2D, texture);
-      shader.use();
+      float value = Color();
       
+      shader.use();
+      shader.setFloat("Colors", value, value, value, value);
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
       glfwSwapBuffers(window);
       glfwPollEvents();
@@ -104,7 +79,12 @@ int main()
    glfwTerminate();
 }
 
-
+float Color()
+{
+   float time = glfwGetTime();
+   float value = (sin(time)/1.5f) + 1.0f;
+   return value;
+}
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
    glViewport(0, 0, width, height);

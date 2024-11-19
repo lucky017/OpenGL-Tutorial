@@ -1,9 +1,11 @@
 
-
+#ifndef SHADER_H
+#define SHADER_H
 
 #include "shaders.h"
 #include<fstream>
 #include<sstream>
+#include<iostream>
 
 std::string  GetFileContext(const char* path)
 {
@@ -19,7 +21,7 @@ std::string  GetFileContext(const char* path)
       source = shaderstream.str();
   }
   catch(std::ifstream::failure e ){
-        std::cout << "[ERROR] : SHADER::FILE READ OPERTAION INTERUOTED" << std::endl;
+        std::cout << "[ERROR] : SHADER::FILE READ OPERTAION INTERUOTED \n" << e.what() << std::endl;
   }
       return source;
 }
@@ -27,10 +29,10 @@ std::string  GetFileContext(const char* path)
 // shader constructor using shader files using fstream and sstream
     Shader::Shader(const char* vertexPath, const char* fragmentPath){
 
-        std::string source = GetFileContext(vertexPath);
-        const char* vertexshadersource = source.c_str();
-        source = GetFileContext(fragmentPath);
-        const char* fragmentshadersource = source.c_str();
+        std::string vsource = GetFileContext(vertexPath);
+        const char* vertexshadersource = vsource.c_str();
+        std::string fsource = GetFileContext(fragmentPath);
+        const char* fragmentshadersource = fsource.c_str();
 
         GLuint vertexshader, fragmentshader;
 
@@ -97,23 +99,23 @@ Shader::Shader(int num, const char* vertexPath, const char* fragmentPath){
 
 
 // values for unifrom values to print colors using fragment shader
-  void Shader::setBool(const std::string &name, bool &r, bool &g, bool &b, bool &a) const{
+  void Shader::setBool(const std::string &name, const bool &r, const bool &g, const bool &b, const bool &a) const{
       glUniform4i(glGetUniformLocation(ID, name.c_str()), (int)r, (int)g, (int)b, (int)a);
   }
-  void Shader::setInt(const std::string &name, int &r, int &g, int &b, int &a) const{
+  void Shader::setInt(const std::string &name, const int &r, const int &g, const int &b, const int &a) const{
       glUniform4i(glGetUniformLocation(ID, name.c_str()), r, g, b, a);
   }
-  void Shader::setFloat(const std::string &name, float &r, float &g, float &b, float &a) const{
+  void Shader::setFloat(const std::string &name, const float &r, const float &g, const float &b, const float &a) const{
       glUniform4f(glGetUniformLocation(ID, name.c_str()), r, g, b, a);
   }
 
-  void Shader::setBool(const std::string &name, bool &c) const{
+  void Shader::setBool(const std::string &name, const bool &c) const{
       glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)c);
   }
-  void Shader::setInt(const std::string &name, int &c) const{
+  void Shader::setInt(const std::string &name, const int &c) const{
       glUniform1i(glGetUniformLocation(ID, name.c_str()), c);
   }
-  void Shader::setFloat(const std::string &name, float &c) const{
+  void Shader::setFloat(const std::string &name, const float &c) const{
       glUniform1f(glGetUniformLocation(ID, name.c_str()), c);
   }
 
@@ -125,11 +127,11 @@ void Shader::CheckErrors(GLuint shader, std::string type) {
     int success;
     char infoLog[512];
 
-    if(type != "PROGRAM"){
+    if(type != "SHADER_PROGRAM"){
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if(!success){
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
-            std::cout << "[ERROR] : " << type <<"::SHADER " << " FAILED TO COMPILE \n" << infoLog << std::endl
+            std::cout << "[ERROR] : " << type << " FAILED TO COMPILE \n" << infoLog << std::endl
                 << "-----------------------------------------------------" << std::endl;
         }
     }
@@ -143,16 +145,16 @@ void Shader::CheckErrors(GLuint shader, std::string type) {
     }
 }
 
-void CheckErrors(int num, GLuint shader, std::string type)
+void Shader::CheckErrors(int num, GLuint shader, std::string type)
 {
     int success;
     char infoLog[512];
-    if(type != "PROGRAM")
+    if(type != "SHADER_PROGRAM")
     {
         glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
         if(!success){
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
-            std::cout << "[ERROR] : " << type <<"::SHADER " << " FAILED TO COMPILE \n" << infoLog << std::endl
+            std::cout << "[ERROR] : " << type << " FAILED TO COMPILE \n" << infoLog << std::endl
                       << "-----------------------------------------------------" << std::endl;
         }
     } else{
@@ -165,4 +167,4 @@ void CheckErrors(int num, GLuint shader, std::string type)
     }
 }
 
-
+#endif

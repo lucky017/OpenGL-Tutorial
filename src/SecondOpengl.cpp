@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include<cmath>
-#include "source.h"
+#include "Headers/shaders.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -40,20 +40,20 @@ int main()
 
 ///-------SHADERS-----------------------------------------
 
-  Shader shader1(1, "/home/lucky/opengl/src/shaders/vertexshader.vs", "/home/lucky/opengl/src/shaders/fragmentshader_1.fs");
-  Shader shader2(2, "/home/lucky/opengl/src/shaders/vertexshader.vs", "/home/lucky/opengl/src/shaders/fragmentshader_2.fs");
+  Shader shader1("/home/lucky/opengl/src/Shaders/vertexshader.vs", "/home/lucky/opengl/src/Shaders/fragmentshader.fs");
+  Shader shader2("/home/lucky/opengl/src/Shaders/vertexshader.vs", "/home/lucky/opengl/src/Shaders/fragmentshader.fs");
   
   GLfloat vertices[] = {
           //vertices            //colors
-      -0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,
-       0.5f,  0.5f, 0.0f,    0.0f, 1.0f, 0.0f,
-      -0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 1.0f
+      -0.5f, -0.5f, 0.0f,    0.5f, 0.0f, 0.0f,
+       0.5f,  0.5f, 0.0f,    0.0f, 0.5f, 0.0f,
+      -0.5f,  0.5f, 0.0f,    0.0f, 0.0f, 0.5f
   };
   GLfloat t_vertices[] = {
           //vertices          //colors
-      -0.5f, -0.5f, 0.0f,    1.0f, 0.0f, 0.0f,
-       0.5f,  0.5f, 0.0f,    0.0f, 1.0f, 0.0f,
-       0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 1.0f
+      -0.5f, -0.5f, 0.0f,    0.5f, 0.0f, 0.0f,
+       0.5f,  0.5f, 0.0f,    0.0f, 0.5f, 0.0f,
+       0.5f, -0.5f, 0.0f,    0.0f, 0.0f, 0.5f
   };
 
   GLuint indices[] = {
@@ -96,26 +96,15 @@ int main()
   {
     processInput(window);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-    GLdouble time_1 = glfwGetTime();
-    GLfloat r_1value = sin(time_1) / 2.0f + 1.0f;
-    GLfloat g_1value = sin(time_1) / 2.0f + 0.2f;
-    GLfloat b_1value = sin(time_1 + 1.0f) / 2.0f + 0.3f; 
     glClear(GL_COLOR_BUFFER_BIT);
+
     shader1.use(); 
-    shader1.setFloat("ourColor", r_1value, g_1value, b_1value);
     glBindVertexArray(VAO[0]);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0); 
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
    
-    GLfloat time_2 = glfwGetTime();
-    GLfloat r_2value = sin(time_2) / 2.0f + 0.3f;
-    GLfloat g_2value = sin(time_2) / 2.0f + 0.2f;
-    GLfloat b_2value = sin(time_2) / 2.0f + 1.0f;
     shader2.use();
-    shader1.setFloat("ourColor", r_2value, g_2value, b_2value);  
     glBindVertexArray(VAO[1]);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); 
-    //glDrawArrays(GL_TRIANGLES, 0, 3);
 
     glfwSwapBuffers(window);
     glfwPollEvents();

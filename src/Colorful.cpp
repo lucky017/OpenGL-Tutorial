@@ -1,10 +1,14 @@
 
 
-#include "headers/shaders.h"
+#include "Headers/shaders.h"
+#include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<cmath>
 
-const char* vertexshadersource = " #version 330 core\n"
+#define WIDTH 800
+#define HEIGHT 800
+
+std::string vertexshadersource = " #version 330 core\n"
                                  " layout (location = 0) in vec3 aPos; \n"
                                  " layout (location = 1) in vec3 aColor; \n"
                                  " out vec3 ourColor; \n"
@@ -13,7 +17,7 @@ const char* vertexshadersource = " #version 330 core\n"
                                  " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
                                  " ourColor = aColor; \n"
                                  " }\0";
-const char* fragmentshadersource=" #version 330 core\n"
+std::string fragmentshadersource=" #version 330 core\n"
                                  " out vec4 FragColor;\n"
                                  " uniform vec4 Colors; \n"
                                  " in vec3 ourColor; \n"
@@ -22,8 +26,6 @@ const char* fragmentshadersource=" #version 330 core\n"
                                  " FragColor = vec4(ourColor, 1.0f) + Colors;\n"
                                  " }\0";
 
-unsigned int WIDTH  = 800;
-unsigned int HEIGHT = 800;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -47,17 +49,23 @@ int main()
 
   Shader shader(vertexshadersource, fragmentshadersource);
 
-   GLfloat vertices[] = {
-//            Textures               Colors
-          -1.0f, -1.0f, 0.0f,   0.5f, 0.0f, 0.0f,
-          -1.0f,  1.0f, 0.0f,   0.0f, 0.5f, 0.0f,
-           1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 0.5f,
-           1.0f,  1.0f, 0.0f
+  GLfloat vertices[] = {
+//            Vertices                     Colors
+         0.00f,  0.50f, 0.0f,/*A0*/   0.5f, 0.0f, 0.0f,
+        -0.50f,  0.25f, 0.0f,/*B1*/   0.0f, 0.5f, 0.0f,
+        -0.25f, -0.50f, 0.0f,/*C2*/   0.0f, 0.0f, 0.5f,
+         0.25f, -0.50f, 0.0f,/*D3*/   0.2f, 0.0f, 0.0f,
+         0.50f,  0.25f, 0.0f,/*E4*/   0.0f, 0.2f, 0.0f,
+         0.10f,  0.10f, 0.0f,/*G5*/   0.0f, 0.0f, 0.2f,
+         0.00f, -0.25f, 0.0f,/*I6*/   1.0f, 0.0f, 0.0f, 
+         0.15f,  0.00f, 0.0f,/*J7*/   0.0f, 1.0f, 0.0f
   };
-   GLuint indices[6] = {
-      0, 1, 2,
-      1, 2, 3
+  GLuint indices[9] = {
+      1, 5, 3,//BFD
+      0, 7, 2,//AJC
+      1, 6, 4//BIE
    };
+
   GLuint VAO, VBO, EBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);

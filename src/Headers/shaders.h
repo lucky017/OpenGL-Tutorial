@@ -15,8 +15,12 @@ struct Shader
 {
 public:
     GLuint ID; 
-    Shader(const char* &vertexshadersource, const char* &fragmentshadersource);
-    Shader(int num, const char* vertexshadersource, const char* fragmentshadersource);
+    Shader(const char* vertexshaderpath, const char* fragmentshaderpath);
+    Shader(int num, const char* vertexshaderpath, const char* fragmentshaderpath);
+    
+    Shader(std::string  &vertexshadersource, std::string &fragmentshadersource);
+    Shader(int num, std::string &vertexshadersource, std::string &fragmentshadersource);
+
 
     void setBool(const std::string &name, const bool &r, const bool &g, const bool &b, const bool &a) const;
     void setBool(const std::string &name, const bool &c) const;

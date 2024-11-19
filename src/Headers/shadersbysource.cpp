@@ -2,7 +2,6 @@
 
 
 #include "shaders.h"
-#include<GLFW/glfw3.h>
 
 std::string GetFileContext(const char* path)
 {
@@ -11,8 +10,10 @@ std::string GetFileContext(const char* path)
 
 
 // shaders constructor for normal infile shader sources
-Shader::Shader(const char* &vertexshadersource, const char* &fragmentshadersource)
+Shader::Shader(std::string &vertex, std::string &fragment)
 {
+  const char* vertexshadersource = vertex.c_str();
+  const char* fragmentshadersource = fragment.c_str();
   GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexshader, 1, &vertexshadersource, NULL);
   glCompileShader(vertexshader);
@@ -33,8 +34,10 @@ Shader::Shader(const char* &vertexshadersource, const char* &fragmentshadersourc
   glDeleteShader(fragmentshader);
 }
 
- Shader::Shader(int num, const char* vertexshadersource, const char* fragmentshadersource)
+Shader::Shader(int num, std::string &vertex, std::string &fragment)
 {
+  const char* vertexshadersource = vertex.c_str();
+  const char* fragmentshadersource = fragment.c_str();
   GLuint vertexshader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexshader, 1, &vertexshadersource, NULL);
   glCompileShader(vertexshader);
