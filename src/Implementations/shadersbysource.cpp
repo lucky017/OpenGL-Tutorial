@@ -1,7 +1,7 @@
 
 
 
-#include "shaders.h"
+#include "../Headers/shaders.h"
 
 std::string GetFileContext(const char* path)
 {

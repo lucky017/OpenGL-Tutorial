@@ -7,3 +7,7 @@
 
 *.json
 .vscode
+
+*.pdf
+*.docx
+*.webp

@@ -35,7 +35,7 @@ public:
     void CheckErrors(int num, GLuint shader, std::string type);
     void use();
     void DeleteProgram();
-
+    unsigned int location(const char* name);
 };
 
 #endif

@@ -2,7 +2,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "shaders.h"
+#include "../Headers/shaders.h" 
 #include<fstream>
 #include<sstream>
 #include<iostream>
@@ -96,7 +96,10 @@ Shader::Shader(int num, const char* vertexPath, const char* fragmentPath){
   void Shader::DeleteProgram(){
         glDeleteShader(ID);
     } 
-
+  
+unsigned int Shader::location(const char* name){
+  return glGetUniformLocation(ID, name);
+}
 
 // values for unifrom values to print colors using fragment shader
   void Shader::setBool(const std::string &name, const bool &r, const bool &g, const bool &b, const bool &a) const{
