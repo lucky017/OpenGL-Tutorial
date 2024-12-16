@@ -25,13 +25,11 @@ int main()
    GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "TRANSFORM", NULL, NULL);
    glfwMakeContextCurrent(window);
    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-   if(!window)
-   {
+   if(!window){
       std::cout << "Issue with creating the opengl window using GLFW" << std::endl;
       return -1;
    }
-   gladLoadGL();  //important to load glad functions to use
-
+   gladLoadGL();  
    Shader shader("/home/lucky/opengl/src/Shaders/Transform.vert","/home/lucky/opengl/src/Shaders/Transform.frag");
 
    GLfloat vertices[] = {
@@ -72,15 +70,12 @@ int main()
    stbi_set_flip_vertically_on_load(true);
    int w, h, n;
    unsigned char* data = stbi_load("/home/lucky/opengl/src/Resources/cat3.jpg", &w, &h, &n, 0);
-   if(data)
-   {
+   if(data){
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
       glGenerateMipmap(GL_TEXTURE_2D);
-   }
-   else{
+      } else{
       std::cout << "Texture Loading Error at STB_IMAGE_LOAD();" << std::endl;
-   }
-   
+      }
    stbi_image_free(data);
    shader.use();
     
@@ -91,19 +86,29 @@ int main()
 
       glm::mat4 trans = glm::mat4(1.0f);
       GLfloat n = (GLfloat)glfwGetTime();
-      //trans = glm::translate(trans, glm::vec3(n * 0.1f, n*0.1f, n*0.1f));
       trans = glm::rotate(trans,n * glm::radians(60.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-
-      //trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-      GLint Location = glGetUniformLocation(shader.ID, "transform");
+      GLint Location = shader.location("transform");
       glUniformMatrix4fv(Location, 1, GL_FALSE, glm::value_ptr(trans));
-
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      
+      trans = glm::mat4(1.0f);
+      trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+      trans = glm::scale(trans, glm::vec3(0.5f));
+      trans = glm::rotate(trans, n * glm::radians(60.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+      glUniformMatrix4fv(Location, 1, GL_FALSE, glm::value_ptr(trans));
       glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
       glfwSwapBuffers(window);
       glfwPollEvents();
    }
-
+ 
+   shader.DeleteProgram();
+   glDeleteBuffers(1, &VBO);
+   glDeleteBuffers(1, &EBO);
+   glDeleteTextures(1, &texture);
+   glDeleteVertexArrays(1, &VAO);
+   glfwDestroyWindow(window);
+   glfwTerminate();
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)

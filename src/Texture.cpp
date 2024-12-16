@@ -98,6 +98,7 @@ int main()
    shader.DeleteProgram();
    glDeleteBuffers(1, &VBO);
    glDeleteBuffers(1, &EBO);
+   glDeleteTextures(1, &texture);
    glDeleteVertexArrays(1, &VAO);
 
    glfwDestroyWindow(window);

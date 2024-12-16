@@ -4,6 +4,10 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<cmath>
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+#include <glm/trigonometric.hpp>
 
 #define WIDTH 800
 #define HEIGHT 800
@@ -12,9 +16,10 @@ std::string vertexshadersource = " #version 330 core\n"
                                  " layout (location = 0) in vec3 aPos; \n"
                                  " layout (location = 1) in vec3 aColor; \n"
                                  " out vec3 ourColor; \n"
+                                 " uniform mat4 transform;"
                                  " void main() \n"
                                  " { \n"
-                                 " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
+                                 " gl_Position = transform * vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
                                  " ourColor = aColor; \n"
                                  " }\0";
 std::string fragmentshadersource=" #version 330 core\n"
@@ -89,8 +94,18 @@ int main()
 
     float values = colors_by_time();
     shader.setFloat("Colors", values, values, values, 1.0f);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+    trans = glm::rotate(trans, (GLfloat)glfwGetTime()* glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    GLfloat Location = glGetUniformLocation(shader.ID, "transform");
+    glUniformMatrix4fv(Location, 1, GL_FALSE, glm::value_ptr(trans));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    
+    trans = glm::mat4(1.0f);
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    glUniformMatrix4fv(Location, 1, GL_FALSE, glm::value_ptr(trans));
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);   
     glfwSwapBuffers(window);
     glfwPollEvents();
 
