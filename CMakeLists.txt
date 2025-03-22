@@ -1,18 +1,12 @@
 
+cmake_minimum_required(VERSION 3.30.0)
+project(OpenGL)
 
-
-
-cmake_minimum_required(VERSION 3.10)
-project(OpenGL VERSION 0.0.1)
-
-set(CMAKE_CXX_STANDARD 11)
-
-# Add glad
-include_directories(${PROJECT_SOURCE_DIR}/glad/include)
-file(GLOB SOURCES "glad/src/glad.c")
-
-# Add your source files
-file(GLOB_RECURSE APP_SOURCES "src/*.cpp")
+SUBDIRS(
+     Implementation 
+     Library 
+     Scripts
+)
 
 # Find OpenGL
 if(POLICY CMP0072)
@@ -22,16 +16,21 @@ find_package(OpenGL REQUIRED)
 
 # Find GLFW
 find_package(glfw3 REQUIRED)
-add_subdirectory(glad)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/)
+add_executable(opengl ${CMAKE_SOURCE_DIR}/Scripts/${SOURCE_FILE_PATH})
 
-# Create the executable
-add_executable(OpenGL ${SOURCES} ${APP_SOURCES})
+target_link_directories(opengl PRIVATE 
+     PUBLIC ${CMAKE_SOURCE_DIR}/Implementation/
+     PUBLIC ${CMAKE_SOURCE_DIR}/Library/
+     )
 
-# Link libraries
 target_link_libraries(
-    OpenGL PUBLIC
+    opengl
+    Implementation
+    glad 
     glfw
-    glad
     dl
-)
-
+    )
+if(TARGET Implementation)
+    target_link_libraries(opengl Implementation)
+endif()
