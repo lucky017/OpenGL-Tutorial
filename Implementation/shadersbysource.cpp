@@ -6,7 +6,7 @@
  *        and Link the Infile or Local vertex and fragment 
  *        shaders(GLSL).It creates a vertexshader, fragmentshader
  *        and a shaderprogram to link the shaders.
- *        Member Functions like SetInt, SetFloat and SetBool is used
+ *        Member Functions like SetInt, SetFloat and SetBool are
  *        to use Uniforms in shaders.
  *        
  */

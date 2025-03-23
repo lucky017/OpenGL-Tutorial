@@ -9,8 +9,10 @@
 #define WIDTH 1380.0f
 #define HEIGHT 780.0f
 
-const double GRAVITY = -9.800000f * (1/300.0f);
-//float PLAYER_Y = 0.5f;
+
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void InputProcess(GLFWwindow* window);
 
 glm::vec3 CAMERA_POSITION(0.0f, 1.2f, 3.0f);
 glm::vec3 DIRECTION_VECTOR(0.0f, 0.0f, -1.0f);
@@ -18,9 +20,11 @@ glm::vec3 UP_VECTOR(0.0f, 1.0f, 0.0f);
 glm::vec3 PLAYER(0.0f, 0.5f, 0.0f);
 glm::vec3 GROUND(100.0f, 0.0f, 100.0f);
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void InputProcess(GLFWwindow* window);
-
+const double GRAVITY = -9.8f * (1/220.0f);
+const float GroundLevel = 0.5f;
+const float Jump_Force = 0.15f;
+bool isJumping = false;
+bool isInGround = true;
 
 int main()
 {
@@ -85,13 +89,16 @@ int main()
       glm::mat4 model = glm::mat4(1.0f);
       glm::mat4 view = glm::mat4(1.0f);
       glm::mat4 projection = glm::mat4(1.0f);
+      
       PLAYER.y += GRAVITY;
-      if(PLAYER.y < 0.5f)
-         PLAYER.y = 0.5f;
+      if(PLAYER.y <= GroundLevel){
+         PLAYER.y = GroundLevel;
+         isInGround = true;
+      }
       
       model = glm::translate(model, PLAYER);
       glUniformMatrix4fv(shader.location("Model"), 1, GL_FALSE, glm::value_ptr(model));
-      view = glm::lookAt( CAMERA_POSITION, DIRECTION_VECTOR, UP_VECTOR );
+      view = glm::lookAt( CAMERA_POSITION, CAMERA_POSITION + DIRECTION_VECTOR, UP_VECTOR );
       glUniformMatrix4fv(shader.location("View"), 1, GL_FALSE, glm::value_ptr(view));
       projection = glm::perspective(glm::radians(60.0f), WIDTH/HEIGHT , 0.1f, 100.0f);
       glUniformMatrix4fv(shader.location("Projection"), 1, GL_FALSE, glm::value_ptr(projection));
@@ -129,17 +136,29 @@ void InputProcess(GLFWwindow* window)
    const float speed = 0.05f;
    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
       glfwSetWindowShouldClose(window, true);
-   else
-   { 
-      if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-         PLAYER += DIRECTION_VECTOR * speed;
-      if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-         PLAYER -= DIRECTION_VECTOR * speed;
-      if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-         PLAYER -= glm::normalize(glm::cross(DIRECTION_VECTOR, UP_VECTOR)) * speed;
-      if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-         PLAYER += glm::normalize(glm::cross(DIRECTION_VECTOR, UP_VECTOR)) * speed;
-      if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && PLAYER.y <=2.2f)
-         PLAYER.y += UP_VECTOR.y * speed * 2.2f;
+    
+   if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+      PLAYER += DIRECTION_VECTOR * speed;
+   if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+      PLAYER -= DIRECTION_VECTOR * speed;
+   if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+      PLAYER -= glm::normalize(glm::cross(DIRECTION_VECTOR, UP_VECTOR)) * speed;
+   if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+      PLAYER += glm::normalize(glm::cross(DIRECTION_VECTOR, UP_VECTOR)) * speed;
+   if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS){
+      if(isInGround){
+         PLAYER.y += Jump_Force;
+         isJumping = true;
+         isInGround = false;
+      }
+      else if(isJumping){
+         PLAYER.y += Jump_Force;
+         if(PLAYER.y >= 2.0f) isJumping = false;
+      }
    }
+   if(CAMERA_POSITION.z - PLAYER.z > 3.0f || PLAYER.z - CAMERA_POSITION.z > -3.0f){
+      float value = PLAYER.z - CAMERA_POSITION.z + 3.0f; 
+      CAMERA_POSITION.z += value;
+   }
+   CAMERA_POSITION.x = PLAYER.x;
 }
