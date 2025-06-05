@@ -36,6 +36,9 @@ public:
     void use();
     void DeleteProgram();
     unsigned int location(const char* name);
+
+    void CreateVertexShader(const char* vertexshaderpath);
+    void CreateFragmentShader(const char* fragmentshaderpath);
 };
 
 #endif

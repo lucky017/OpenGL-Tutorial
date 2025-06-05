@@ -7,7 +7,7 @@
  *        shaders(GLSL).It creates a vertexshader, fragmentshader
  *        and a shaderprogram to link the shaders.
  *        Member Functions like SetInt, SetFloat and SetBool are
- *        to use Uniforms in shaders.
+ *        to set Uniforms in shaders.
  *
  */
 
@@ -103,6 +103,41 @@ Shader::Shader(int num, const char* vertexPath, const char* fragmentPath){
     glDeleteShader(fragmentshader);    
 }
 
+void Shader::CreateVertexShader(const char* vertexshaderpath)
+{
+    std::string pathToShaders = std::string("/home/lucky/opengl/Shaders/") + vertexshaderpath;
+    std::string VertexShaderCode_Str = GetFileContext(pathToShaders.c_str());
+    const char* vertexshadersource = VertexShaderCode_Str.c_str();
+
+    GLuint vertexshader; 
+    
+    vertexshader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexshader, 1, &vertexshadersource, NULL);
+    glCompileShader(vertexshader);
+    CheckErrors(vertexshader, "VERTEX_SHADER");
+
+    glAttachShader(ID, vertexshader);
+    glLinkProgram(ID);
+    glDeleteShader(vertexshader);
+}
+
+void Shader::CreateFragmentShader(const char* fragmentaderpath)
+{
+    std::string pathToShaders = std::string("/home/lucky/opengl/Shaders/") + fragmentaderpath;
+    std::string FragmentShaderCode_str = GetFileContext(pathToShaders.c_str());
+    const char* fragmentshadersource = FragmentShaderCode_str.c_str();
+
+    GLuint fragmentshader; 
+    
+    fragmentshader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentshader, 1, &fragmentshadersource, NULL);
+    glCompileShader(fragmentshader);
+    CheckErrors(fragmentshader, "VERTEX_SHADER");
+
+    glAttachShader(ID, fragmentshader);
+    glLinkProgram(ID);
+    glDeleteShader(fragmentshader);
+}
 
 //-----------------------------------------------------------------------------------------
 

@@ -1,0 +1,101 @@
+.
+├── bin
+│   └── opengl
+├── build
+│   ├── build.sh
+│   └── run.sh
+├── CMakeLists.txt
+├── compile_commands.json
+├── Implementation
+│   ├── CMakeLists.txt
+│   ├── shadersbypath.cpp
+│   └── shadersbysource.cpp
+├── Include
+│   ├── shaders.h
+│   ├── stb_image.h
+│   └── stb_image_write.h
+├── info.txt
+├── Library
+│   ├── CMakeLists.txt
+│   ├── glad
+│   │   └── glad.h
+│   ├── GLFW
+│   │   ├── glfw3.h
+│   │   └── glfw3native.h
+│   ├── KHR
+│   │   └── khrplatform.h
+│   └── src
+│       └── glad.c
+├── README.md
+├── References
+│   └── offline learnopengl.pdf
+├── Resources
+│   ├── cat2.webp
+│   ├── cat3.jpg
+│   ├── cat.jpg
+│   └── Textures
+│       ├── container.jpg
+│       └── wall.jpg
+├── Scripts
+│   ├── Basics
+│   │   ├── Rectangle.cpp
+│   │   └── TwoTriangles.cpp
+│   ├── Camera
+│   │   ├── Camera.cpp
+│   │   └── SimpleGame.cpp
+│   ├── CMakeLists.txt
+│   ├── Draw
+│   │   ├── Colorful.cpp
+│   │   ├── Colors.cpp
+│   │   └── Stars.cpp
+│   ├── GET
+│   │   ├── ffmpeg.cpp
+│   │   └── points.cpp
+│   ├── Lighting
+│   │   └── Light.cpp
+│   ├── Projections
+│   │   ├── Orthographic_Projection.cpp
+│   │   └── Perspective_Projection.cpp
+│   ├── Tetris
+│   │   └── Game.cpp
+│   ├── Textures
+│   │   ├── Mirror_repeat.cpp
+│   │   └── Texture.cpp
+│   └── Transformations
+│       └── Movement.cpp
+├── Shaders
+│   ├── Basics
+│   │   ├── Rectangle.fs
+│   │   └── Rectangle.vs
+│   ├── Camera
+│   │   ├── camera.fs
+│   │   ├── camera.vs
+│   │   ├── SimpleGame.fs
+│   │   └── SimpleGame.vs
+│   ├── Draw
+│   │   ├── Colors.fs
+│   │   ├── Colors.vs
+│   │   ├── Stars.fs
+│   │   └── Stars.vs
+│   ├── Lighting
+│   │   ├── Light.fs
+│   │   └── Light.vs
+│   ├── Projections
+│   │   ├── Orthographic_Projection.fs
+│   │   ├── Orthographic_Projection.vs
+│   │   ├── Perspective_Projection.fs
+│   │   └── Perspective_Projection.vs
+│   ├── Tetris
+│   │   ├── Game.fs
+│   │   └── Game.vs
+│   ├── Textures
+│   │   ├── Mirror_repeat.fs
+│   │   ├── Mirror_repeat.vs
+│   │   ├── Texture.fs
+│   │   └── Texture.vs
+│   └── Transformations
+│       ├── Movement.fs
+│       └── Movement.vs
+└── Tree.map
+
+32 directories, 67 files
